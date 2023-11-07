@@ -1,0 +1,34 @@
+const int ledPin = 3;           // Define the PWM capable pin connected to the LED
+const int increaseButtonPin = 4; // Define the pin for the button to increase brightness
+const int decreaseButtonPin = 5; // Define the pin for the button to decrease brightness
+const unsigned long blinkInterval = 12.5; // 12.5 milliseconds (40Hz)
+unsigned long previousMillis = 0; // Store the last time the LED brightness was changed
+int ledBrightness = 90; // Start with an initial brightness of 90 (adjust as needed)
+
+void setup() {
+  pinMode(ledPin, OUTPUT);         // Set the LED pin as an OUTPUT
+  pinMode(increaseButtonPin, INPUT_PULLUP); // Set the increase button pin as input with pull-up resistor
+  pinMode(decreaseButtonPin, INPUT_PULLUP); // Set the decrease button pin as input with pull-up resistor
+}
+
+void loop() {
+  unsigned long currentMillis = millis(); // Get the current time
+
+  // Check if it's time to change the LED brightness
+  if (currentMillis - previousMillis >= blinkInterval) {
+    previousMillis = currentMillis; // Save the last time the LED brightness was changed
+    analogWrite(ledPin, ledBrightness); // Set LED brightness
+
+    // Check the increase button
+    if (digitalRead(increaseButtonPin) == LOW) {
+      // Increase brightness by 5 (limit to 255)
+      ledBrightness = min(255, ledBrightness + 5);
+    }
+
+    // Check the decrease button
+    if (digitalRead(decreaseButtonPin) == LOW) {
+      // Decrease brightness by 5 (limit to 0)
+      ledBrightness = max(0, ledBrightness - 5);
+    }
+  }
+}
